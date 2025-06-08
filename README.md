@@ -19,7 +19,7 @@ Clona el repositorio:
 
 Bash
 
-git clone https://github.com/tu_usuario/tu_repositorio.git
+git clone (https://github.com/danielaza23/deep_learning)
 cd tu_repositorio
 Crea un entorno virtual (recomendado):
 
