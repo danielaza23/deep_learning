@@ -16,6 +16,11 @@ def torch_fun_1(x):
     return sum(y**2)
 
 def torch_fun_2(x):
+    if not isinstance(x, torch.Tensor):
+        raise ValueError(f"Input must be a pytorch tensor but is {type(x)}")
+    if (10,) != x.shape:
+        raise ValueError(f"Input must be of shape (10, ) but has shape {x.shape}")
+    
     g = torch.Generator()
     g.manual_seed(42)
     y = x + torch.randint(4, 20, size=(10, ), generator=g)
