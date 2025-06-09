@@ -1,0 +1,28 @@
+# Entornos virtuales de Python y Conda
+.env
+.venv
+env/
+venv/
+/anaconda3/
+/deeplearning/
+
+# Archivos de Cache y compilados de Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Carpetas de configuración de IDEs
+.vscode/
+.idea/
+
+# Archivos de Jupyter Notebook
+.ipynb_checkpoints
+
+# Archivos de datos locales (muy importante)
+# Nunca subas datasets grandes a GitHub
+data/
+*.csv
+*.json
+*.pkl
+*.h5

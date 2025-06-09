@@ -4,8 +4,8 @@ from pathlib import Path
 
 from time import time
 
-from functions import torch_fun_1, tf_fun_1, torch_fun_2, tf_fun_2
-from solution import optimize_torch_fun1, optimize_torch_fun2, optimize_tf_fun1, optimize_tf_fun2
+from tarea_1.functions import torch_fun_1, tf_fun_1, torch_fun_2, tf_fun_2
+from tarea_1.solution import optimize_torch_fun1, optimize_torch_fun2, optimize_tf_fun1, optimize_tf_fun2
 
 def score_fun(fun, optimization_fun, optimal_score, minimal_score_for_points, timeout):
 
