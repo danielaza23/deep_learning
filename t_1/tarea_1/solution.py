@@ -46,9 +46,7 @@ def optimize_torch_fun1(f):
         else: # Si el bucle termina sin converger
             results[opt_name] = {"steps": max_steps, "final_x": x.detach().clone()}
 
-    # --- Lógica para decidir el ganador ---
-    
-    # Filtramos los que sí convergieron
+
     converged_optimizers = {name: data for name, data in results.items() if data['steps'] < max_steps}
     
     if converged_optimizers:
@@ -74,9 +72,8 @@ def optimize_torch_fun2(f):
     """
         # Parámetros de la competencia interna
     tolerance = 1e-4
-    max_steps = 1000 # Aumentamos los pasos para dar oportunidad a los más lentos
-    
-    # Estructura para guardar el resultado de cada optimizador
+    max_steps = 1000 
+
     results = {}
     
     learning_rates = {"SGD": 0.01, "Momentum": 0.01, "Adagrad": 0.1, "RMSprop": 0.01, "Adam": 0.1}
@@ -96,22 +93,17 @@ def optimize_torch_fun2(f):
         elif opt_name == "Adam": optimizer = torch.optim.Adam([x], lr=lr)
         else: continue
 
-        # Bucle de optimización hasta la convergencia
         for step in range(1, max_steps + 1):
             optimizer.zero_grad()
             loss = f(x)
             if loss.item() < tolerance:
-                # ¡Importante! Guardamos el número de pasos y una copia del tensor final
                 results[opt_name] = {"steps": step, "final_x": x.detach().clone()}
                 break
             loss.backward()
             optimizer.step()
-        else: # Si el bucle termina sin converger
+        else: 
             results[opt_name] = {"steps": max_steps, "final_x": x.detach().clone()}
 
-    # --- Lógica para decidir el ganador ---
-    
-    # Filtramos los que sí convergieron
     converged_optimizers = {name: data for name, data in results.items() if data['steps'] < max_steps}
     
     if converged_optimizers:
@@ -161,7 +153,6 @@ def _optimize_tf(f, shape, tolerance, max_steps):
         else:
             results[opt_name] = {"steps": max_steps, "final_x": x}
 
-    # ----- ¡CAMBIOS AQUÍ! Se añaden los prints solicitados -----
     converged_optimizers = {name: data for name, data in results.items() if data['steps'] < max_steps}
     if converged_optimizers:
         best_optimizer_name = min(converged_optimizers, key=lambda name: converged_optimizers[name]['steps'])
