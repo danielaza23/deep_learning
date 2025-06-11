@@ -4,20 +4,18 @@ import numpy as np
 
 
 def optimize_torch_fun1(f):
-    tolerance = 1e-4
-    max_steps = 2000 
-    
+    tolerance = 1e-2
+    max_steps = 100000 
     results = {}
     
-    learning_rates = {"SGD": 0.01, "Momentum": 0.01, "Adagrad": 0.1, "RMSprop": 0.01, "Adam": 0.1}
+    learning_rates = {"SGD": 0.01, "Momentum": 0.01, "Adagrad": 0.01, "RMSprop": 0.01, "Adam": 0.01}
     optimizers_to_test = ["SGD", "Momentum", "Adagrad", "RMSprop", "Adam"]
 
     print("--- Iniciando competencia en optimize_torch_fun1 ---")
     for opt_name in optimizers_to_test:
-        # Print para saber qué se está probando
-        print(f"  [INFO] Probando Optimizador: {opt_name}, LR: {learning_rates.get(opt_name, 0.1)}")
+        print(f"  [INFO] Probando Optimizador: {opt_name}, LR: {learning_rates.get(opt_name)}")
         x = torch.zeros(2, requires_grad=True)
-        lr = learning_rates.get(opt_name, 0.1)
+        lr = learning_rates.get(opt_name)
 
         if opt_name == "SGD": optimizer = torch.optim.SGD([x], lr=lr)
         elif opt_name == "Momentum": optimizer = torch.optim.SGD([x], lr=lr, momentum=0.9)
@@ -26,23 +24,25 @@ def optimize_torch_fun1(f):
         elif opt_name == "Adam": optimizer = torch.optim.Adam([x], lr=lr)
         else: continue
 
+        loss = torch.tensor(float('inf'))
         for step in range(1, max_steps + 1):
             optimizer.zero_grad()
             loss = f(x)
             
-            # NUEVO: Print para ver el progreso de la pérdida
-            if step == 1 or step % 200 == 0:
+            if step == 1 or step % 10000 == 0: # Ajustado para menos prints
                 print(f"    Paso {step:4d}: Pérdida = {loss.item():.6f}")
 
             if loss.item() < tolerance:
                 results[opt_name] = {"steps": step, "final_x": x.detach().clone()}
+                break
+            if not torch.isfinite(loss):
+                print("    ¡La pérdida explotó! Deteniendo optimizador.")
                 break
             loss.backward()
             optimizer.step()
         else: 
             results[opt_name] = {"steps": max_steps, "final_x": x.detach().clone()}
         
-        # Print con el resultado final para este optimizador
         print(f"  [FINAL] Pérdida final para {opt_name}: {loss.item():.6f} (después de {step} pasos)\n")
 
 
@@ -57,18 +57,18 @@ def optimize_torch_fun1(f):
         return results['Adam']['final_x']
 
 def optimize_torch_fun2(f):
-    tolerance = 1e-4
-    max_steps = 2000 
+    tolerance = 1e-2
+    max_steps = 100000
     results = {}
-    learning_rates = {"SGD": 0.01, "Momentum": 0.01, "Adagrad": 0.1, "RMSprop": 0.01, "Adam": 0.1}
+
+    learning_rates = {"SGD": 0.01, "Momentum": 0.01, "Adagrad": 0.01, "RMSprop": 0.01, "Adam": 0.01}
     optimizers_to_test = ["SGD", "Momentum", "Adagrad", "RMSprop", "Adam"]
 
     print("--- Iniciando competencia en optimize_torch_fun2 ---")
     for opt_name in optimizers_to_test:
-        # Print para saber qué se está probando
-        print(f"  [INFO] Probando Optimizador: {opt_name}, LR: {learning_rates.get(opt_name, 0.1)}")
+        print(f"  [INFO] Probando Optimizador: {opt_name}, LR: {learning_rates.get(opt_name)}")
         x = torch.zeros(10, requires_grad=True)
-        lr = learning_rates.get(opt_name, 0.1)
+        lr = learning_rates.get(opt_name)
 
         if opt_name == "SGD": optimizer = torch.optim.SGD([x], lr=lr)
         elif opt_name == "Momentum": optimizer = torch.optim.SGD([x], lr=lr, momentum=0.9)
@@ -77,23 +77,25 @@ def optimize_torch_fun2(f):
         elif opt_name == "Adam": optimizer = torch.optim.Adam([x], lr=lr)
         else: continue
 
+        loss = torch.tensor(float('inf'))
         for step in range(1, max_steps + 1):
             optimizer.zero_grad()
             loss = f(x)
 
-            # Print para ver el progreso de la pérdida
-            if step == 1 or step % 200 == 0:
+            if step == 1 or step % 10000 == 0: # Ajustado para menos prints
                 print(f"    Paso {step:4d}: Pérdida = {loss.item():.6f}")
 
             if loss.item() < tolerance:
                 results[opt_name] = {"steps": step, "final_x": x.detach().clone()}
+                break
+            if not torch.isfinite(loss):
+                print("¡La pérdida explotó! Deteniendo optimizador.")
                 break
             loss.backward()
             optimizer.step()
         else: 
             results[opt_name] = {"steps": max_steps, "final_x": x.detach().clone()}
             
-        # Print con el resultado final para este optimizador
         print(f"  [FINAL] Pérdida final para {opt_name}: {loss.item():.6f} (después de {step} pasos)\n")
 
     converged_optimizers = {name: data for name, data in results.items() if data['steps'] < max_steps}
@@ -109,14 +111,15 @@ def optimize_torch_fun2(f):
 
 def _optimize_tf(f, shape, tolerance, max_steps):
     results = {}
-    learning_rates = {"SGD": 0.01, "Momentum": 0.01, "Adagrad": 0.1, "RMSprop": 0.01, "Adam": 0.1}
+    
+    learning_rates = {"SGD": 0.01, "Momentum": 0.01, "Adagrad": 0.01, "RMSprop": 0.01, "Adam": 0.01}
     optimizers_to_test = ["SGD", "Momentum", "Adagrad", "RMSprop", "Adam"]
 
+    print(f"--- Iniciando competencia en _optimize_tf para shape {shape} ---")
     for opt_name in optimizers_to_test:
-        # Print para saber qué se está probando
-        print(f"  [INFO] Probando Optimizador: {opt_name}, LR: {learning_rates.get(opt_name, 0.1)}")
+        print(f"  [INFO] Probando Optimizador: {opt_name}, LR: {learning_rates.get(opt_name)}")
         x = tf.Variable(tf.zeros(shape), dtype=tf.float32)
-        lr = learning_rates.get(opt_name, 0.1)
+        lr = learning_rates.get(opt_name)
 
         if opt_name == "SGD": optimizer = tf.keras.optimizers.SGD(learning_rate=lr)
         elif opt_name == "Momentum": optimizer = tf.keras.optimizers.SGD(learning_rate=lr, momentum=0.9)
@@ -125,15 +128,17 @@ def _optimize_tf(f, shape, tolerance, max_steps):
         elif opt_name == "Adam": optimizer = tf.keras.optimizers.Adam(learning_rate=lr)
         else: continue
 
-        loss = None # Definir loss fuera del bucle para el print final
+        loss = None 
         for step in range(1, max_steps + 1):
             with tf.GradientTape() as tape:
                 loss = f(x)
             
-            # Print para ver el progreso de la pérdida
-            if step == 1 or step % 200 == 0:
+            if step == 1 or step % 10000 == 0: # Ajustado para menos prints
                 print(f"    Paso {step:4d}: Pérdida = {loss.numpy():.6f}")
 
+            if not tf.math.is_finite(loss):
+                print("    ¡La pérdida explotó! Deteniendo optimizador.")
+                break
             if loss < tolerance:
                 results[opt_name] = {"steps": step, "final_x": x}
                 break
@@ -146,8 +151,6 @@ def _optimize_tf(f, shape, tolerance, max_steps):
                 break
         else:
             results[opt_name] = {"steps": max_steps, "final_x": x}
-        
-        # Print con el resultado final para este optimizador
         if loss is not None:
             print(f"  [FINAL] Pérdida final para {opt_name}: {loss.numpy():.6f} (después de {step} pasos)\n")
 
@@ -161,8 +164,7 @@ def _optimize_tf(f, shape, tolerance, max_steps):
         return results['Adam']['final_x']
 
 def optimize_tf_fun1(f):
-    return _optimize_tf(f, shape=(2,), tolerance=1e-4, max_steps=2000)
+    return _optimize_tf(f, shape=(2,), tolerance=1e-2, max_steps=10000) 
 
 def optimize_tf_fun2(f):
-    return _optimize_tf(f, shape=(10,), tolerance=1e-4, max_steps=2000)
-t
+    return _optimize_tf(f, shape=(10,), tolerance=1e-2, max_steps=10000) 
