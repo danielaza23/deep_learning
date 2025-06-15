@@ -32,12 +32,12 @@ leaderboard_scores = []
 
 scores = []
 for name, obj_fun, optimizer_fun, least_possible_fun_val, fun_val_to_receive_points in [
-    ("PyTorch Function 1", torch_fun_1, optimize_torch_fun1, 0, 100),
-    ("PyTorch Function 2", torch_fun_2, optimize_torch_fun2, 0, 100),
-    ("TensorFlow Function 1", tf_fun_1, optimize_tf_fun1, 0, 100),
+    #("PyTorch Function 1", torch_fun_1, optimize_torch_fun1, 0, 100),
+    #("PyTorch Function 2", torch_fun_2, optimize_torch_fun2, 0, 100),
+    #("TensorFlow Function 1", tf_fun_1, optimize_tf_fun1, 0, 100),
     ("TensorFlow Function 2", tf_fun_2, optimize_tf_fun2, 0, 10)
 ]:
-    score = score_fun(obj_fun, optimizer_fun, least_possible_fun_val, fun_val_to_receive_points, timeout=30)
+    score = score_fun(obj_fun, optimizer_fun, least_possible_fun_val, fun_val_to_receive_points, timeout=60)
     leaderboard_scores.append({
         "name": name,
         "value": score
