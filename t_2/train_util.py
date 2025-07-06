@@ -49,8 +49,7 @@ def make_model(framework, seed):
             nn.Linear(1024, 512),  nn.ReLU(),   
             nn.Linear(512, 256),   nn.ReLU(),   
             nn.Linear(256, 128),   nn.ReLU(),   
-            nn.Linear(128, 10),                
-            nn.Softmax(dim=1)                  
+            nn.Linear(128, 10)                
         )
         return model
 
@@ -88,7 +87,7 @@ def train_network(network, X, y, optimizer, learning_rate, batch_size, timeout):
 
             num_samples = X.shape[0]
             while True:
-                if time.time() - start_time >= timeout - 0.1:
+                if time.time() - start_time >= timeout - 1:
                     break
                 idx = np.random.choice(num_samples, batch_size, replace=False)
                 x_batch = X[idx]
@@ -119,7 +118,7 @@ def train_network(network, X, y, optimizer, learning_rate, batch_size, timeout):
 
             num_samples = X.shape[0]
             while True:
-                if time.time() - start_time >= timeout - 0.1:
+                if time.time() - start_time >= timeout - 1:
                     break
                 idx = np.random.choice(num_samples, batch_size, replace=False)
                 x_batch = X_tensor[idx]
